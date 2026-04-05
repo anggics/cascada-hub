@@ -145,7 +145,7 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzBBBDJ7p67d8cPRv7gtANYdptYDokyQlxyPKtHq1M70Le2PPP4iYsXVpPuC_tkuyNj/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxiYEJH05nXBg0K9t7WvL5gK58fG2XdB_CtZuUTioUwX9XRifTNAiMQp1V_dNzEASNg/exec"; 
 
         const form = document.getElementById('formLogin');
         const loginPage = document.getElementById('page-login');
@@ -282,6 +282,55 @@ function updateSidebarActive(activeId) {
         activeItem.classList.add('active-menu', 'bg-blue-50', 'text-blue-600');
         activeItem.classList.remove('text-gray-500');
     }
+}
+
+// Fungsi ini harus dipanggil setelah profile.html dimuat
+function initProfileLogic() {
+    const form = document.getElementById('formChangePassword');
+    if (!form) return;
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const oldPass = document.getElementById('oldPassword').value;
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+        const username = document.getElementById('nameDisplay').innerText; // Ambil user yang login
+
+        if (newPass !== confirmPass) {
+            alert("Konfirmasi password tidak cocok!");
+            return;
+        }
+
+        const btn = e.target.querySelector('button');
+        btn.innerText = "Memproses...";
+        btn.disabled = true;
+
+        // KIRIM KE GOOGLE APPS SCRIPT
+        try {
+            const payload = {
+                action: "changePassword", // Tambahkan flag action
+                username: username,
+                oldPassword: oldPass,
+                newPassword: newPass
+            };
+
+            // Jika di Vercel, kita gunakan fetch ke URL Web App GAS
+            await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Apps Script butuh ini jika lewat domain lain
+                body: JSON.stringify(payload)
+            });
+
+            alert("Permintaan ubah password telah dikirim! Silakan cek Google Sheet Anda.");
+            form.reset();
+        } catch (err) {
+            alert("Terjadi kesalahan koneksi.");
+        } finally {
+            btn.innerText = "Perbarui Kata Sandi";
+            btn.disabled = false;
+        }
+    };
 }
     </script>
 </body>
