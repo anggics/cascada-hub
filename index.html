@@ -203,6 +203,44 @@
             loginPage.classList.remove('hidden');
             form.reset();
         }
+
+        async function loadProfile() {
+    const contentArea = document.getElementById('main-content-area');
+    
+    // Mengambil konten dari profile.html
+    try {
+        const response = await fetch('profile.html');
+        const html = await response.text();
+        contentArea.innerHTML = html;
+        
+        // Inisialisasi event listener untuk form yang baru dimuat
+        initProfileLogic();
+    } catch (err) {
+        console.error("Gagal memuat halaman profil", err);
+    }
+}
+
+function initProfileLogic() {
+    const form = document.getElementById('formChangePassword');
+    if(!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+
+        if(newPass !== confirmPass) {
+            alert("Konfirmasi password tidak cocok!");
+            return;
+        }
+
+        alert("Permintaan ubah password dikirim ke server...");
+        // Di sini Anda panggil google.script.run.changePassword(...) jika integrasi penuh
+    });
+}
+
+// Hubungkan ke menu Sidebar "Akun Saya"
+document.querySelector('[data-menu="profile"]').addEventListener('click', loadProfile);
     </script>
 </body>
 </html>
