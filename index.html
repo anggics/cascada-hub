@@ -145,7 +145,7 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzC4hvLJDU9i3xI33-bWuiootsLQZMXxvrPMVqIvQ0nmHiIM6RJx5usskVm72H9pHkg/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwCLMYjR2-RXDp8i2NhUQuVv6v-voTpVDi4owFo9v4EE5nDgLOoFNrJ-GKFqNK39MQQ/exec"; 
 
         const form = document.getElementById('formLogin');
         const loginPage = document.getElementById('page-login');
@@ -322,7 +322,7 @@ function initProfileLogic() {
                 body: JSON.stringify(payload)
             });
 
-            alert("Permintaan ubah password telah dikirim! Silakan cek Google Sheet Anda.");
+            alert("Permintaan ubah password telah dikirim! Silakan login kembali");
             form.reset();
         } catch (err) {
             alert("Terjadi kesalahan koneksi.");
