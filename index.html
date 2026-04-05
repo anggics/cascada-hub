@@ -15,6 +15,7 @@
         .sidebar-item:hover { background-color: #f0f7ff; color: #3b82f6; }
         .active-menu { background-color: #f0f7ff; color: #3b82f6; border-right: 4px solid #3b82f6; }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-gray-50 overflow-hidden">
 
@@ -145,7 +146,7 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbx1nFKZPLUFN9y2JjEy69WROOWPsN1ciuc7MeNgqiBA7AGLIOu-TGKf9hmIoEaoiJwx/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwMdsVdhLWD_63YxS04CFhaF82fxknra1VWFW6ZNcozhtUE4oPZ06t6MM8jvLb42otA/exec"; 
 
         const form = document.getElementById('formLogin');
         const loginPage = document.getElementById('page-login');
@@ -289,8 +290,9 @@ function initProfileLogic() {
     const form = document.getElementById('formChangePassword');
     if (!form) return;
 
-    form.onsubmit = async (e) => {
+    form.onsubmit = function(e) {
         e.preventDefault();
+        
         const btn = e.target.querySelector('button');
         const oldPass = document.getElementById('oldPassword').value;
         const newPass = document.getElementById('newPassword').value;
@@ -299,28 +301,34 @@ function initProfileLogic() {
         btn.innerText = "Memproses...";
         btn.disabled = true;
 
-        // Gunakan teknik Query String agar bisa menangkap balasan (Hack untuk GAS)
-        const finalUrl = `${GAS_URL}?action=changePassword&username=${encodeURIComponent(username)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
-
-        try {
-            // Gunakan script tag hack atau fetch biasa ke doGet
-            const response = await fetch(finalUrl);
-            const resData = await response.json();
-
-            if (resData.status === "success") {
-                alert("✅ " + resData.message);
-                form.reset();
-            } else {
-                alert("❌ " + resData.message);
+        // Gunakan jQuery AJAX dengan dataType 'jsonp'
+        $.ajax({
+            url: GAS_URL,
+            method: 'GET',
+            data: {
+                action: "changePassword",
+                username: username,
+                oldPass: oldPass,
+                newPass: newPass
+            },
+            dataType: 'jsonp',
+            success: function(resData) {
+                if (resData.status === "success") {
+                    alert("✅ " + resData.message);
+                    form.reset();
+                } else {
+                    alert("❌ " + resData.message);
+                }
+                btn.innerText = "Perbarui Kata Sandi";
+                btn.disabled = false;
+            },
+            error: function() {
+                // Jika masih error, ini biasanya karena GAS tidak mengirim JSONP yang benar
+                alert("Koneksi gagal, tapi silakan cek Google Sheet Anda.");
+                btn.innerText = "Perbarui Kata Sandi";
+                btn.disabled = false;
             }
-        } catch (err) {
-            // Jika masih terkena CORS, biasanya data SUDAH masuk ke Sheet 
-            // tapi browser tetap memblokir pesan balasannya.
-            alert("Sistem sedang memproses. Silakan cek berkala di Sheet Anda.");
-        } finally {
-            btn.innerText = "Perbarui Kata Sandi";
-            btn.disabled = false;
-        }
+        });
     };
 }
     </script>
