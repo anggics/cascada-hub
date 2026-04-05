@@ -318,7 +318,7 @@ function initProfileLogic() {
             success: function(resData) {
                 if (resData.status === "success") {
                     alert("✅ " + resData.message);
-                    form.reset();
+                    handleLogout();
                 } else {
                     alert("❌ " + resData.message);
                 }
