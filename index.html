@@ -146,7 +146,7 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyCymiWAUeW_zKDX0sw1qAzCh6Z33MQ2GMDZyXNFUQ1FmHv0MXt8u0ahwyB-SzSchfM/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzynXzep61I29pvHazGzxxHuOnMB-ccb84UuZHJUFqqgeJMihXZidEIYofxNZZOdZvJ/exec"; 
 
         const form = document.getElementById('formLogin');
         const loginPage = document.getElementById('page-login');
@@ -180,8 +180,9 @@
             dataType: 'jsonp',
             success: function(resData) {
                 if (resData.status === "success") {
-                    alert("✅ " + resData.message);
-                    form.reset();
+                   // alert("✅ " + resData.message);
+                    switchToDashboard(resData.user);
+                   // form.reset();
                 } else {
                     alert("❌ " + resData.message);
                 }
