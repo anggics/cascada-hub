@@ -146,7 +146,7 @@
 
     <script>
         // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyNZSTOMuIrU378O2E7WR_bc1mRCjwIApBUFrHl4_RrMXUus8CYle8xr4K3JX9cR0Ti/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbz_ZVA-9hL8aXmdbvgxhvXq2fkjjA60w7BuPjiKbZckr2QphdUuwjbWpDhR570aVCKR/exec"; 
 
         const form = document.getElementById('formLogin');
         const loginPage = document.getElementById('page-login');
@@ -164,48 +164,24 @@
             try {
                 // Karena 'no-cors' tidak bisa membaca response, kita gunakan teknik fetch biasa
                 // Pastikan di Apps Script sudah mengizinkan CORS (Header)
-                // const response = await fetch(GAS_URL, {
-                //     method: 'POST',
-                //     body: JSON.stringify({ username: user, password: pass })
-                // });
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ username: user, password: pass })
+                });
 
-                 $.ajax({
-            url: GAS_URL,
-            method: 'POST',
-            data: {
-                action: "login",
-                username: user,
-                password: pass
-            },
-            dataType: 'jsonp',
-            success: function(resData) {
-                if (resData.status === "success") {
-                   // alert("✅ " + resData.message);
-                    switchToDashboard(resData.user);
-                   // form.reset();
-                } else {
-                    alert("❌ " + resData.message);
-                }
-            },
-            error: function() {
-                // Jika masih error, ini biasanya karena GAS tidak mengirim JSONP yang benar
-                alert("Koneksi gagal");
-                // btn.innerText = "Perbarui Kata Sandi";
-                // btn.disabled = false;
-            }
-        });
+             
 
                 // Simulasi Sukses (Untuk demo cepat jika CORS terkendala)
-                // if(user === "admin" || user === "warga") {
-                //     switchToDashboard(user);
-                // } else {
-                //     alert("Gagal Login. Gunakan 'admin' atau 'warga'");
-                // }
+                if(user === "admin" || user === "warga") {
+                    switchToDashboard(user);
+                } else {
+                    alert("Gagal Login. Gunakan 'admin' atau 'warga'");
+                }
 
             } catch (err) {
                 // Jika fetch gagal (karena CORS), kita tetap arahkan untuk simulasi UI
-               // switchToDashboard(user);
-                alert("Gagal Cors");
+             switchToDashboard(user);
+            //    alert("Gagal Cors");
             } finally {
                 btn.innerHTML = 'Login <i class="fas fa-arrow-right text-xs"></i>';
                 btn.disabled = false;
